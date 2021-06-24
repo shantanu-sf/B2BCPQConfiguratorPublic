@@ -1,8 +1,12 @@
 {
-  "orgName": "shantanu.bhardwaj company",
+  "orgName": "demo company",
   "edition": "Developer",
-  "features": ["EnableSetPasswordInApi"],
+  "features": ["Communities", "B2BCommerce", "OrderManagement", "CPQ"],
   "settings": {
+    "communitiesSettings": {
+      "enableNetworksEnabled": true
+      , "enableOotbProfExtUserOpsEnable": true
+    },
     "lightningExperienceSettings": {
       "enableS1DesktopEnabled": true
     },

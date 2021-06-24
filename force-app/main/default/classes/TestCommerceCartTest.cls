@@ -8,7 +8,6 @@ public with sharing class TestCommerceCartTest {
                 Name = 'Test Product 01',
                 IsActive = true,
                 ProductCode = 'TP-01',
-                CurrencyIsoCode = 'USD',
             	SBQQ__ConfigurationType__c = 'Allowed'
         );
 
@@ -16,7 +15,6 @@ public with sharing class TestCommerceCartTest {
 
         PricebookEntry pbe = new PricebookEntry(
                 Product2Id=p.Id,
-                CurrencyIsoCode = 'USD',
                 IsActive = true,
                 Pricebook2Id = Test.getStandardPricebookId(),
                 UnitPrice = 100
