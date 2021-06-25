@@ -6,7 +6,8 @@ import My_Resource from '@salesforce/resourceUrl/salesforce_logo';
 import APEX_SaveToCart from '@salesforce/apex/TestCommerceCart.SaveToCart';
 import LoadProductConfig from '@salesforce/apex/TestCommerceCart.LoadProductConfig';
 import { loadStyle } from 'lightning/platformResourceLoader';
-import b2bbundlestyle from '@salesforce/resourceUrl/b2bbundlestyle'
+import b2bbundlestyle from '@salesforce/resourceUrl/b2bbundlestyle';
+import BASE_PATH from "@salesforce/community/basePath";
 
 export default class B2bBundleConfigurator extends LightningElement {
   @api bundleId;
@@ -28,6 +29,16 @@ export default class B2bBundleConfigurator extends LightningElement {
   modalHeader = 'Where next?';
   salesforceLogo = My_Resource;
 
+  get communityName() {
+		let path = BASE_PATH;
+		let pos = BASE_PATH.lastIndexOf("/s");
+		if (pos >= 0) {
+			path = BASE_PATH.substring(0, pos);
+		}
+
+		return path;
+	}
+  
   get resolvedEffectiveAccountId() {
     const effectiveAccountId = this.effectiveAccountId || '';
     let resolved = null;
@@ -76,7 +87,7 @@ export default class B2bBundleConfigurator extends LightningElement {
     this.initialProductConfig = parsedResponse.ProductModel;
     this.features = this.initialProductConfig.features;
     let theseOptions = this.initialProductConfig.options;
-    let mappedOptions = theseOptions.map(option => { option.record.ProductImage = theseImages[option.record.SBQQ__OptionalSKU__c]; return option});
+    let mappedOptions = theseOptions.map(option => { option.record.ProductImage = this.formatImageUrl(theseImages[option.record.SBQQ__OptionalSKU__c]); return option});
     this.options = mappedOptions;
     this.bundleName = this.initialProductConfig.record.Name;
     this.configStateAttributes.QuoteId = parsedResponse.QuoteId;
@@ -240,6 +251,24 @@ export default class B2bBundleConfigurator extends LightningElement {
         // mode: mode || 'dismissable'
       })
     );
+  }
+  formatImageUrl(imageUrl) {
+    // format image url
+    let url = imageUrl;
+
+    if (url.indexOf("/cms/delivery/media") == 0) {
+        const searchRegExp = /\/cms\/delivery\/media/g;
+
+        url = url.replace(searchRegExp, this.communityName + "/cms/delivery/media");
+    }
+
+    if (url.indexOf("/cms/media") == 0) {
+        const searchRegExp = /\/cms\/media/g;
+
+        url = url.replace(searchRegExp, this.communityName + "/cms/delivery/media");
+    }
+
+    return url;
   }
   instantiateWrapperClass(option) {
     const wrapper = {

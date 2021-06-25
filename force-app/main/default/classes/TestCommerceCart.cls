@@ -156,7 +156,7 @@ public with sharing class TestCommerceCart {
 		for(String id : productIds)
         {
             string url = GetProductImage(id, webstoreId, accountId);
-            imgMap.put(id, GetBaseUrl() + url);
+            imgMap.put(id, url);
         }
         return imgMap;
     }
@@ -180,11 +180,6 @@ public with sharing class TestCommerceCart {
             }
             return 'image not found';
         }
-    }
-    
-    public static String getBaseUrl()
-    {
-        return URL.getOrgDomainUrl().toExternalForm();
     }
  
     public static Id getPriceBookId() {

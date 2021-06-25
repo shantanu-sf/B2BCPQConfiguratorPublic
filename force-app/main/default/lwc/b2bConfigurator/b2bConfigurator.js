@@ -1,5 +1,5 @@
 import { LightningElement, api } from "lwc";
-
+import BASE_PATH from "@salesforce/community/basePath";
 
 export default class B2bConfigurator extends LightningElement {
   @api effectiveAccountId;
@@ -7,6 +7,16 @@ export default class B2bConfigurator extends LightningElement {
   view = "selection";
   bundleId;
   bundleImage;
+  
+  get communityName() {
+		let path = BASE_PATH;
+		let pos = BASE_PATH.lastIndexOf("/s");
+		if (pos >= 0) {
+			path = BASE_PATH.substring(0, pos);
+		}
+
+		return path;
+	}
 
   get resolvedEffectiveAccountId() {
     const effectiveAccountId = this.effectiveAccountId || '';
@@ -34,19 +44,30 @@ export default class B2bConfigurator extends LightningElement {
     console.log('this.cartBaseURL', this.cartBaseURL);
   }
 
-  // handleConfigureBundle(event) {
-  //   this.updateView(event);
-  //   this.bundleId = event.detail.recordId;
-  //   console.log("this.view :>> ", this.view);
-  //   console.log("this.bundleId :>> ", this.bundleId);
-  // }
-
   handleConfigureBundleTile(event) {
     this.updateView(event);
     this.bundleId = event.detail.recordId;
-    this.bundleImage = event.detail.bundleImage;
+    this.bundleImage = this.formatImageUrl(event.detail.bundleImage);
     console.log("this.bundleImage :>> ", this.bundleImage);
-    // console.log("this.bundleId :>> ", this.bundleId);
+  }
+
+  formatImageUrl(imageUrl) {
+    // format image url
+    let url = imageUrl;
+
+    if (url.indexOf("/cms/delivery/media") == 0) {
+        const searchRegExp = /\/cms\/delivery\/media/g;
+
+        url = url.replace(searchRegExp, this.communityName + "/cms/delivery/media");
+    }
+
+    if (url.indexOf("/cms/media") == 0) {
+        const searchRegExp = /\/cms\/media/g;
+
+        url = url.replace(searchRegExp, this.communityName + "/cms/delivery/media");
+    }
+
+    return url;
   }
 
   updateView(event) {
